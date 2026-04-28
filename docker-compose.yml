@@ -12,7 +12,8 @@ services:
       - DATABASE_URL=postgresql://notes_user:notes_pass@postgres:5432/notes_db
       - PYTHONUNBUFFERED=1
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy 
     command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
 
   postgres:
@@ -26,6 +27,25 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U notes_user -d notes_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: notes-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: password123
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
 
 volumes:
   postgres_data:
+  pgadmin_data:
