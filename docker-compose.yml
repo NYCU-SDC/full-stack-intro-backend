@@ -9,7 +9,7 @@ services:
     volumes:
       - .:/app
     environment:
-      - DATABASE_URL=postgresql://notes_user:notes_pass@postgres:5432/notes_db
+      - DATABASE_URL=postgresql://notes_user:notes_pass@postgres:5432/notes_db # Update with your actual database URL
       - PYTHONUNBUFFERED=1
     depends_on:
       postgres:
@@ -19,6 +19,7 @@ services:
   postgres:
     image: postgres:15-alpine
     container_name: notes-db
+    # Set environment variables for PostgreSQL
     environment:
       POSTGRES_USER: notes_user
       POSTGRES_PASSWORD: notes_pass
@@ -36,6 +37,7 @@ services:
   pgadmin:
     image: dpage/pgadmin4
     container_name: notes-pgadmin
+    # Set environment variables for pgAdmin
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@example.com
       PGADMIN_DEFAULT_PASSWORD: password123
