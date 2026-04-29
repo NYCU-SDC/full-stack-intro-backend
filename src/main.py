@@ -4,7 +4,7 @@ from src.routes import notes
 
 # Create the FastAPI application
 app = FastAPI(
-    title="Notes API",
+    title="Digital Note API",
     description="Personal Cloud Notebook API",
     version="1.0.0"
 )
@@ -18,6 +18,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Root endpoint for testing
+@app.get("/")
+def read_root():
+    return {"message": "Backend is running"}
+
 # Health check endpoint
 @app.get("/health")
 def health_check():
@@ -26,8 +31,8 @@ def health_check():
         "message": "Notes API is running"
     }
 
-# Include routers
-app.include_router(notes.router, prefix="/api/notes", tags=["notes"])
+# Include routers. Each router owns its own prefix and tags.
+app.include_router(notes.router)
 
 # Startup instruction
 if __name__ == "__main__":
