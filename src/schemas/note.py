@@ -10,7 +10,7 @@ class NoteCreate(BaseModel):
 
 
 class NoteRead(BaseModel):
-    note_id: int
+    note_id: int = Field(..., gt=0)
     user_id: int
     title: str
     content: str

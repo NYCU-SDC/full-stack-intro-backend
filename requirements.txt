@@ -5,3 +5,5 @@ psycopg2-binary            # PostgreSQL database adapter
 python-dotenv              # Environment variable management
 pydantic                   # Data validation and settings management
 python-multipart           # Support for parsing multipart/form-data
+pytest                     # Testing framework
+pytest-cov                 # Test coverage reporting
