@@ -1,6 +1,14 @@
+from pathlib import Path
+
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
+
+from src.config.database import Base, engine
 from src.routes import notes
+
+STATIC_DIR = Path(__file__).resolve().parent / "static"
 
 # Create the FastAPI application
 app = FastAPI(
@@ -18,10 +26,22 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Root endpoint for testing
+
+def initialize_database() -> None:
+    Base.metadata.create_all(bind=engine)
+
+
+@app.on_event("startup")
+def on_startup() -> None:
+    initialize_database()
+
+
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+
+
 @app.get("/")
 def read_root():
-    return {"message": "Backend is running"}
+    return FileResponse(STATIC_DIR / "index.html")
 
 # Health check endpoint
 @app.get("/health")
